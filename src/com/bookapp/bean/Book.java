@@ -1,3 +1,8 @@
+
+/*Author @sharmila
+ * version 0.1
+ * 
+ */
 package com.bookapp.bean;
 
 public class Book {

@@ -1,11 +1,16 @@
-package com.bookapp.main;
 
+/*Author @sharmila
+ * version 0.1
+ * 
+ */
+package com.bookapp.main;
 //import java.util.Scanner;
 
 import com.bookapp.dao.BookImpl;
 import com.bookapp.dao.BookInter;
 import com.bookapp.dao.ModelDAO;
 import com.bookapp.exception.AuthorNotFoundException;
+import com.bookapp.exception.BookNotFoundException;
 import com.bookapp.exception.CategoryNotFoundException;
 
 import java.io.FileNotFoundException;
@@ -22,15 +27,22 @@ import com.bookapp.bean.Book;
 
 public class Client {
 
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
 
+		Scanner scanner = new Scanner(System.in);
+		System.out.println(
+				"Enter your choice :\n1.To show All Books \n2.Get Book by Author \n3.Get Book by Category \n4.Update Book \n5.Delete Book \n6.Get book by Id");
+		int choice = scanner.nextInt();
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your choice :\n1.To show All Books \n2.Get Book by Author \n3.Get Book by Category \n4.Update Book \n5.Delete Book");
-        int choice = scanner.nextInt();
+		BookInter b = new BookImpl();
 
-        BookInter b = new BookImpl();
+//        try {
+//            Book book = b.getBookById(1);
+//            System.out.println(book);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 //        Book b1 = new Book("Data Structure", "Sharma", "latest", 001, 200);
 //        b.addBook(b1);
@@ -47,56 +59,86 @@ public class Client {
 //        Book b5 = new Book("Angular", "Rohit", "SecondEdition", 005, 200);
 //        b.addBook(b5);
 
+		switch (choice) {
 
-        switch (choice) {
+		case 1:
+			List<Book> books = b.getAllBooks();
 
-            case 1:
-                List<Book> books = b.getAllBooks();
+			for (Book book : books) {
+				System.out.println(book.toString());
+			}
+			break;
 
-                for(Book book:books) {
-                    System.out.println(book.toString());
-                }
-                break;
+		case 2:
 
-            case 2:
+			System.out.println("Enter the author name:");
+			String authorName = scanner.next();
 
-                System.out.println("Enter the author name:");
-                String authorName = scanner.next();
+			try {
+				List<Book> auth = b.getBookbyAuthor(authorName);
+				for (Book a : auth) {
+					System.out.println(a);
+				}
+			} catch (AuthorNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+			break;
 
-                try {
-                    System.out.println(b.getBookbyAuthor(authorName));
-                } catch (AuthorNotFoundException e) {
-                    System.out.println(e.getMessage());
-                }
-                break;
+		case 3:
 
-            case 3:
+			System.out.println("Enter the category:");
+			String category = scanner.next();
 
-                System.out.println("Enter the category:");
-                String category = scanner.next();
+			try {
+				List<Book> categories = b.getBookbycategory(category);
 
-                try {
-                    System.out.println(b.getBookbycategory(category));
-                } catch (CategoryNotFoundException e) {
-                    System.out.println(e.getMessage());
-                }
-                break;
+				for (Book book : categories) {
+					System.out.println(book);
+				}
+			} catch (CategoryNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+			break;
 
-            case 4:
-                System.out.println("Update the Book Price : ");
-                int bookId = scanner.nextInt();
-                int price = scanner.nextInt();
-                break;
+		case 4:
+			System.out.println("Enter book Id : ");
+			int bookId = scanner.nextInt();
+			System.out.println("Update the Book Price : ");
 
-            case 5:
-                System.out.println("Delete the BookId : ");
-                int bookid = scanner.nextInt();
-                break;
+			int price = scanner.nextInt();
+			b.updateBook(bookId, price);
 
-            default:
-                System.exit(0);
-        }
-        scanner.close();
-    }
+			System.out.println("Book updated successfully");
+			try {
+				Book updatedBook = b.getBookById(bookId);
+				System.out.println(updatedBook);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+
+		case 5:
+			System.out.println("Enter delete Id ");
+			int bookid = scanner.nextInt();
+
+			System.out.println(" Book deleted successfully");
+			break;
+
+		case 6:
+			System.out.println("Enter book id");
+			int booksid = scanner.nextInt();
+
+			try {
+				Book id = b.getBookById(booksid);
+				System.out.println(id);
+			} catch (BookNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+			break;
+
+		default:
+			System.exit(0);
+		}
+		scanner.close();
+	}
 }
-
